@@ -31,13 +31,9 @@ exports.getForm = async (req, res) => {
         res.status(500).json({ error: err.toString() })
     }
 };
-
+const array = []
 exports.newContact = async (req, res) => {
     const data = req.body
-    console.log(data)
-    
     locationModel.createLocation(data);
-    locationModel.getAllLocation
     res.end("teste")
-
 };

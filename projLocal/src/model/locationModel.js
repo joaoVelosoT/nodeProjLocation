@@ -1,7 +1,7 @@
 const { json } = require('body-parser');
 const fs = require('fs');
 const path = require('path');
-const { stringify } = require('querystring');
+const { stringify, parse } = require('querystring');
 
 const fileName = 'dbLocation.json';
 const filePath = path.join(__dirname, '..', 'database', fileName);
@@ -17,6 +17,7 @@ class LocationModel {
                         reject(err);
                     }
                 } else {
+                    console.log(data)
                     resolve(JSON.parse(data));
                 }
             });
@@ -25,7 +26,7 @@ class LocationModel {
 
     static async writeLocationToFile(location) {
         return new Promise((resolve, reject) => {
-            fs.appendFileSync(filePath, JSON.stringify(location), (err) => {
+            fs.writeFile(filePath, JSON.stringify(location), (err) => {
                 if (err) reject(err);
                 console.log(`Data written to file: ${filePath}`);
                 resolve(this.getAllLocation());
@@ -40,16 +41,21 @@ class LocationModel {
     }
 
     static async createLocation(location){
-        const locations = []
-        locations.push(location)
-
-        fs.appendFileSync(filePath, JSON.stringify(locations), (err) => {
-            if (err) reject(err);
-            console.log(`Data written to file: ${filePath}`);
-            resolve(this.getAllLocation());
-        });
-        console.log(locations)
         
+        fs.readFile(filePath, 'utf-8', (err,data) => {
+            if (err) {
+                console.error('Erro ao ler o arquivo:', err);
+                return;
+            }
+            let database = []
+            database = JSON.parse(data)
+
+            database.push(location)
+
+            this.writeLocationToFile(database)
+            this.getLocation
+        })
+      
     }
 
 
